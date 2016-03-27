@@ -15,7 +15,7 @@ public class RSSExample {
 		
 		// 遠端資料路徑
 		// >>>Fill here<<< 
-		String uri = "";
+		String uri = "http://feed.pixnet.net/blog/posts/rss/fion4224";
 
 		System.out.println(
 				CrawlerPack.start()

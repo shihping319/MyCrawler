@@ -20,11 +20,14 @@ public class Stock2330 {
 				+ "/Report201602/201602_F3_1_8_2330.php"
 				+ "?STK_NO=2330&myear=2016&mmon=03";
 		
-		System.out.println( 
+		System.out.println(uri);
+		
+		System.out.println(
+			"成交股數,成交金額,開盤價,最高價,最低價,收盤價,漲跌價差,成交筆數 \n"+
 			CrawlerPack.start()
 				.setRemoteEncoding("big5")
 				.getFromHtml(uri)
-				.select("") // 如何取得證交取的數字格式 >>>Fill here<<< 
+				.select("td:matchesOwn(([\\+\\-])*[0-9]{1,3}(,[0-9]{3})*(\\.[0-9]+)*)") // 如何取得證交取的數字格式 >>>Fill here<<< 
 		);
 		
 		

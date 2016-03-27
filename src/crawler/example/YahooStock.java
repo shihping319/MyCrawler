@@ -17,6 +17,7 @@ import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+
 /**
  * 整合練習：Yahoo Stock 個股成交明細
  * 
@@ -36,8 +37,8 @@ public class YahooStock {
 
 	static Logger log = LoggerFactory.getLogger(YahooStock.class);
 	// >>>Fill here<<< 
-	final static String mongodbServer = ""; // your host name
-	final static String mongodbDB = "";		// your db name
+	final static String mongodbServer = "mongodb://user01:user01@ds025419.mlab.com:25419/yahoostock"; // your host name
+	final static String mongodbDB = "yahoostock";		// your db name
 	
 	static String stockNumber;
 	
@@ -81,8 +82,7 @@ public class YahooStock {
 				// 目標含有  成 交 明 細  的table
 				// <td align="center" width="240">2330 台積電 成 交 明 細</td>
 				// >>>Fill here<<
-				.select("") ;
-
+				.select("table:matches(成 交 明 細)") ;
 		// 分解明細資料表格
 		List<DBObject> parsedTransDetail = parseTransDetail(transDetail);
 		
@@ -103,11 +103,13 @@ public class YahooStock {
 		// 將以下分解出資料日期中的 105/03/25
 		// <td width="180">資料日期：105/03/25</td>
 		// >>>Fill here<<< 
-		String day = "";  // day 要是 105/03/25 如何寫
+		String day = transDetail
+				.select("td:matchesOwn(資料日期)")
+				.text().substring(5,14);  // day 要是 105/03/25 如何寫
 		
 		// 取出 header 以外的所有交易資料
 		// >>>Fill here<<< 
-		for(Element detail: transDetail.select("") ){
+		for(Element detail: transDetail.select("tr:gt(1)") ){
 			
 			Map<String, String> data = new HashMap<>();
 			
@@ -131,7 +133,9 @@ public class YahooStock {
 			data.put("volume", detail.select("td:eq(5)").text());
 			
 			result.add( new BasicDBObject(data) );
+			System.out.println(data);
 		}
+		
 		return result;
 	} 
 	
@@ -144,9 +148,11 @@ public class YahooStock {
 
 		MongoClient mongoClient ;
 		try {
+			mongoClient = new MongoClient( mongodbServer );
+
+			DB db = mongoClient.getDB( mongodbDB );
 			
-			// 如何將資料寫回 mongodb ?
-			// >>>Fill here<<< 
+			db.getCollection("shihping319").insert(parsedTransDetail);
 			
 		} catch (Exception e) {
 			log.warn(e.getMessage());

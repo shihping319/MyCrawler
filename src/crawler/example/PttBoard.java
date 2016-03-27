@@ -27,7 +27,7 @@ class PttBoard {
     final static String pttIndexPage = "https://www.ptt.cc/bbs/"+board+"/index%s.html";
     
     // 取得最後幾篇的文章數量(bug?)
-    static Integer loadLastPosts = 20;
+    static Integer loadLastPosts = 3;
 
     public static void main(String[] argv){
 
@@ -35,7 +35,7 @@ class PttBoard {
     	// >>>Fill here<<< 
         String prevPage =
             CrawlerPack.start()
-                .addCookie("","")                		// 八卦版進入需要設定cookie
+                .addCookie("18","1")                		// 八卦版進入需要設定cookie
                 .getFromHtml(pttMainPage)            	// 遠端資料格式為 HTML
                 .select("")  							// 取得右上角『前一頁』的內容
                 .get(1).attr("href")
